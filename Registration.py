@@ -6,13 +6,8 @@ from streamlit_option_menu import option_menu
 #import pickle
 #import plotly.graph_objects as go
 from streamlit_phone_number import st_phone_number
-
-# import Photo.py
 from Photo import take_photo
 
-from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
-import av
-import cv2
 
 # https://github.com/ikatyang/emoji-cheat-sheet
 
