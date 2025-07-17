@@ -1,8 +1,8 @@
 
 import streamlit as st
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
-import cv2
-import av
+#import cv2
+#import av
 import numpy as np
 
 def take_photo():
