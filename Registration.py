@@ -12,7 +12,7 @@ from Photo import take_photo
 # https://github.com/ikatyang/emoji-cheat-sheet
 
 st.set_page_config(
-    page_title="Buffalo Bills Stadium",
+    page_title="ABC Construction Project",
     page_icon="🧊",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -75,7 +75,7 @@ def next_step():
 if selected == "Worker Registration":
     col1, col2 = st.columns([2, 1])
     with col1:
-        st.title('Worker Registration :construction_worker:')
+        st.title('Worker Registration 👷')
         st.header("Enter your basic information")
         st.divider()
         col1, col2 = st.columns([2, 2])
