@@ -1,2 +1,3 @@
 streamlit-option-menu
 streamlit_phone_number
+streamlit_webrtc
