@@ -7,6 +7,9 @@ from streamlit_option_menu import option_menu
 #import plotly.graph_objects as go
 from streamlit_phone_number import st_phone_number
 from Photo import take_photo
+#from Common import init, MENU_OPTIONS, SELECTED_INDEX
+from Common import *
+from PersonalInfo import get_personal_info
 
 
 # https://github.com/ikatyang/emoji-cheat-sheet
@@ -23,16 +26,8 @@ st.set_page_config(
     },
 )
 
-def init(key, default_value):
-    if key not in st.session_state:
-        st.session_state[key] = default_value   
+init_session_variables()
 
-LAST_NAME = "last_name"
-FIRST_NAME = "first_name"
-EMAIL = "email"
-DOB = "dob"
-MOBILE = "mobile"
-SELECTED_INDEX = "selected_index"
 
 # Initialize session state variables
 init("setup_complete", False)
@@ -42,16 +37,7 @@ init("chat_complete", False)
 init("messages", [])
 
 init(SELECTED_INDEX, 0)
-init(FIRST_NAME, "")
-init(LAST_NAME, "")
-init(EMAIL, "")
-init(DOB, datetime.date.today())
-init(MOBILE, "")
 
-MENU_OPTIONS = [
-    "Worker Registration", "Take a Photo", "Personal Information", "Contact Information",
-    "Trades", "Certifications", "Consent Form", "Project Courses", "Chat"
-]
 
 with st.sidebar:
     selected = option_menu(
@@ -104,38 +90,10 @@ if selected == "Worker Registration":
     
 
 if selected == "Take a Photo":
-    col1a, col2a = st.columns([2, 1])
-    with col1a:
-        take_photo()  # Call the function to take a photo
+    take_photo()    
+        
+if selected == "Personal Information":
+    get_personal_info()
 
 
-        # xxx
-
-
-
-        # st.title('Take a photo 📸')
-        # if "captured_photo" not in st.session_state:
-        #     st.session_state["captured_photo"] = None
-        # if "latest_frame" not in st.session_state:
-        #     st.session_state["latest_frame"] = None
-
-        # class VideoProcessor(VideoTransformerBase):
-        #     def transform(self, frame):
-        #         img = frame.to_ndarray(format="bgr24")
-        #         st.session_state["latest_frame"] = img.copy()
-        #         return img
-
-        # webrtc_streamer(key="example", video_processor_factory=VideoProcessor)
-
-        # if st.button("📷 Capture Photo"):
-        #     if st.session_state["latest_frame"] is not None:
-        #         st.session_state["captured_photo"] = st.session_state["latest_frame"]
-        #         st.image(st.session_state["captured_photo"], channels="BGR", caption="Captured Photo")
-        #     else:
-        #         st.warning("No frame captured yet.")
-
-        # # Always show the last captured photo if it exists
-        # if st.session_state["captured_photo"] is not None:
-        #     st.image(st.session_state["captured_photo"], channels="BGR", caption="Last Captured Photo")
-        # else:
-        #     st.warning("No photo captured yet. Please capture a photo first.")
+  

@@ -1,13 +1,7 @@
 import streamlit as st
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
 import numpy as np
-
-def init(key, default_value):
-    if key not in st.session_state:
-        st.session_state[key] = default_value
-
-def get_session(key):
-    return st.session_state.get(key, None)  
+from Common import *
 
 def in_session(key):
     return st.session_state[key]
@@ -26,6 +20,7 @@ PHOTO_SESSION_3_CAMERA_ACTIVE = 3
 PHOTO_SESSION_4_PHOTO_TAKEN = 4
 PHOTO_SESSION_5_PHOTO_ACCEPTED = 5
 PHOTO_SESSION_6_PHOTO_DONE = 6
+PHOTO_SESSION_7_MOVE_ON = 7
 
 
 def init_photo_sessions():
@@ -67,6 +62,9 @@ def take_photo():
 
     st.title("Take a Photo 📸")
 
+    if get_session(PHOTO_SESSION) == PHOTO_SESSION_7_MOVE_ON:
+        return
+
     if get_session(PHOTO_SESSION) == PHOTO_SESSION_6_PHOTO_DONE:
         col1, col2 = st.columns(2)
         with col1:
@@ -75,7 +73,10 @@ def take_photo():
                 st.rerun()
         with col2:
             if st.button("Next"):
-                st.write("Moving on to the next step...")
+                if get_session(SELECTED_INDEX)  < len(MENU_OPTIONS) - 1:
+                    st.session_state[SELECTED_INDEX] += 1
+                    st.rerun()
+                    return
         
         show_photo()
         return
@@ -84,12 +85,13 @@ def take_photo():
         st.success("Photo accepted!")
         st.balloons()
         show_photo()
-        set_session(PHOTO_SESSION, PHOTO_SESSION_6_PHOTO_DONE)        
+        set_session(PHOTO_SESSION, PHOTO_SESSION_6_PHOTO_DONE)
+        st.rerun()
         return
 
     if get_session(PHOTO_SESSION) == PHOTO_SESSION_4_PHOTO_TAKEN:
         #if st.session_state[CAPTURED_IMAGE_KEY] is not None:
-        col1, col2 = st.columns(2)
+        col1, col2 = st.columns([0.2,0.2],gap="large")
         with col1:
             if st.button("Accept Photo"):
                 set_session(PHOTO_SESSION, PHOTO_SESSION_5_PHOTO_ACCEPTED)

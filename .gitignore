@@ -1,2 +1,12 @@
 .streamlit/secrets.toml
 __pycache__/Photo.cpython-312.pyc
+PersonalInfo.py
+__pycache__/Registration.cpython-312.pyc
+__pycache__/Photo.cpython-312.pyc
+__pycache__/PersonalInfo.cpython-312.pyc
+__pycache__/Common.cpython-312.pyc
+__pycache__/Photo.cpython-312.pyc
+__pycache__/Photo.cpython-312.pyc
+__pycache__/*
+*cpython*
+__pycache__/Photo.cpython-312.pyc
