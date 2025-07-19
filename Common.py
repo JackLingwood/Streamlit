@@ -38,29 +38,38 @@ EMERGENCY_CONTACT_NAME = "emergency_contact_name"
 EMERGENCY_CONTACT_RELATIONSHIP = "emergency_contact_relationship"
 EMERGENCY_CONTACT_PHONE = "emergency_contact_phone"
 
-CERTIFICATE_NAME= "certificate_name"
-CERTIFICATE_ISSUE_DATE = "certificate_issue_date"
-CERTIFICATE_ISSUED_BY = "certificate_issued_by"
-CERTIFICATE_NUMBER = "certificate_number"
-CERTIFICATE_EXPIRY_DATE = "certificate_expiry_date"
-
-
-
-
-
 ROLE = "role"
 WORK_EXPERIENCE = "work_experience"
 LABOR_UNION = "labor_union"
 LABOR_UNION_NUMBER = "labor_union_number"
 SELECTED_TRADES = "selected_trades"
 
+CERTIFICATION_TYPE = "certification_type"
+CERTIFICATE_ID = "certificate_id"
+CERTIFICATE_DESCRIPTION= "certificate_description"
+CERTIFICATE_ISSUE_DATE = "certificate_issue_date"
+CERTIFICATE_EXPIRY_DATE = "certificate_expiry_date"
+CERTIFICATE_ISSUED_BY = "certificate_issued_by"
+CERTIFICATE_IMAGE = "certificate_image"
+
+CONSENT_FORM_JOB_TITLE = "consent_form_job_title"
+CONSENT_FORM_TRADE_STATUS = "consent_form_trade_status"
+CONSENT_FORM_SUPERVISOR_NAME = "consent_form_supervisor_name"
+CONSENT_FORM_SUPERVISOR_PHONE = "consent_form_supervisor_phone"
+CONSENT_FORM_PROJECT_TRADE = "consent_form_project_trade"
+CONSENT_FORM_SUPERVISOR_NAME = "consent_form_supervisor_name"
+
+CONSENT_FORM_SIGNATURE_DATE = "consent_form_signature_date"
+CONSENT_FORM_SIGNATURE = "consent_form_signature"
+
+
+
 
 
 
 def init_session_variables():
     init(SELECTED_INDEX, 0)
-    init(FIRST_NAME, "" \
-    "")
+    init(FIRST_NAME, "")
     init(MIDDLE_NAME, "")
     init(LAST_NAME, "")
     init(EMAIL, "")
@@ -96,6 +105,23 @@ def init_session_variables():
     init(LABOR_UNION_NUMBER, "")
     init(SELECTED_TRADES, [])
 
+    init(CERTIFICATION_TYPE, "")
+    init(CERTIFICATE_ID, "")
+    init(CERTIFICATE_DESCRIPTION, "")
+    init(CERTIFICATE_ISSUE_DATE, datetime.date.today())
+    init(CERTIFICATE_EXPIRY_DATE, datetime.date.today())
+    init(CERTIFICATE_ISSUED_BY, "")
+    init(CERTIFICATE_IMAGE, None)
+    init(CONSENT_FORM_SUPERVISOR_PHONE, "")
+
+    init(CONSENT_FORM_JOB_TITLE, "")
+    init(CONSENT_FORM_TRADE_STATUS, "")
+    init(CONSENT_FORM_SUPERVISOR_NAME, "")
+    init(CONSENT_FORM_PROJECT_TRADE, "")
+    init(CONSENT_FORM_SIGNATURE_DATE, datetime.date.today())
+    init(CONSENT_FORM_SIGNATURE, None)
+
+
 def init(key, default_value):
     if key not in st.session_state:
         st.session_state[key] = default_value
@@ -121,7 +147,7 @@ def put_selectbox(session_key, label, options, index=0):
  #   st.session_state[session_key] = st.date_input(label=label,value=st.session_state[session_key], min_value=min_value if min_value else datetime.date(1900, 1, 1), max_value=max_value if max_value else datetime.date.today())
 
 
-def put_date_input(session_key, label, min_value=None, max_value=None):
+def put_date_input(session_key, label, min_value=None, max_value=None, label_visibility="collapsed"):
     min_value = min_value or datetime.date(1900, 1, 1)
     max_value = max_value or datetime.date.today()
 
@@ -138,5 +164,6 @@ def put_date_input(session_key, label, min_value=None, max_value=None):
         label=label,
         value=existing_value,
         min_value=min_value,
-        max_value=max_value
-    )    
+        max_value=max_value,
+        label_visibility=label_visibility
+    )

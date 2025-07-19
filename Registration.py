@@ -14,13 +14,14 @@ from PersonalInfo import get_personal_info
 from ContactInfo import get_contact_info
 from Trades import get_trade_info
 from Certificates import get_certificate_info
+from ConsentForm import get_consent_form
 
 
 # https://github.com/ikatyang/emoji-cheat-sheet
 
 st.set_page_config(
     page_title="ABC Construction Project",
-    page_icon="🧊",
+    page_icon="🏗️",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
@@ -97,14 +98,17 @@ if selected == "Contact Information":
 if selected == "Trades":
     get_trade_info()    
 
-if selected == "Certificates":    
+if selected == "Certifications":    
     get_certificate_info()
 
+if selected == "Consent Form":
+    get_consent_form()  
 
-st.write("### Navigation")  
-st.write("Selected: ", selected)
-st.write("Index: ", st.session_state[SELECTED_INDEX])
-st.write("Max Index: ", len(MENU_OPTIONS) - 1)
+
+# st.write("### Navigation")  
+# st.write("Selected: ", selected)
+# st.write("Index: ", st.session_state[SELECTED_INDEX])
+# st.write("Max Index: ", len(MENU_OPTIONS) - 1)
 
 
 col_left, col_right = st.columns([3, 1])
