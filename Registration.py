@@ -1,4 +1,5 @@
-import datetime
+from datetime import *
+from dateutil.relativedelta import relativedelta
 import streamlit as st
 from streamlit_option_menu import option_menu
 #import pandas as pd
@@ -10,6 +11,9 @@ from Photo import take_photo
 #from Common import init, MENU_OPTIONS, SELECTED_INDEX
 from Common import *
 from PersonalInfo import get_personal_info
+from ContactInfo import get_contact_info
+from Trades import get_trade_info
+from Certificates import get_certificate_info
 
 
 # https://github.com/ikatyang/emoji-cheat-sheet
@@ -28,16 +32,13 @@ st.set_page_config(
 
 init_session_variables()
 
-
 # Initialize session state variables
 init("setup_complete", False)
 init("user_message_count", 0)
 init("feedback_shown", False)   
 init("chat_complete", False)
 init("messages", [])
-
 init(SELECTED_INDEX, 0)
-
 
 with st.sidebar:
     selected = option_menu(
@@ -67,27 +68,22 @@ if selected == "Worker Registration":
         col1, col2 = st.columns([2, 2])
 
         with col1:
-            st.session_state[FIRST_NAME] = st.text_input(label="First Name", value=st.session_state[FIRST_NAME], placeholder="Enter your first name", max_chars=20)
-            st.session_state[EMAIL] = st.text_input(label="Email", value=st.session_state[EMAIL], placeholder="Enter your email", max_chars=20)            
-            st.session_state[DOB] = st.date_input(label="Date of birth",    value=st.session_state[DOB], min_value=datetime.date(1900, 1, 1), max_value=datetime.date.today()) 
-        
-        with col2:
-            st.session_state[LAST_NAME] = st.text_input(label="Last Name", value=st.session_state[LAST_NAME], placeholder="Enter your last name", max_chars=20)
-            #st.session_state[MOBILE] = st.text_input(label="Mobile", value=st.session_state[MOBILE], placeholder="Enter your mobile number", max_chars=20)
-            st.session_state[MOBILE] = st_phone_number(label="Mobile", placeholder="Enter your mobile number",  default_country="US")
+            put_text_input(FIRST_NAME, "First Name", "Enter your first name")
+            put_text_input(EMAIL, "Email", "Enter your email")
 
+            min_value = datetime.date(1900, 1, 1)
+            today = date.today()
+            sixteen_years_ago = today - relativedelta(years=16)
+            put_date_input(DOB, "Date of birth", min_value=min_value, max_value=sixteen_years_ago)
+
+        with col2:
+            put_text_input(LAST_NAME, "Last Name", "Enter your last name")
+            put_text_input(MOBILE, "Mobile", "Enter your mobile number")
+            
 
     # if st.button("Next", on_click=complete_setup):
     #     st.write("Setup complete. Starting interview...")        
 
-    col_left, col_right = st.columns([3, 1])
-    with col_right:
-        if st.button("Next"):
-            if st.session_state[SELECTED_INDEX] < len(MENU_OPTIONS) - 1:
-                st.session_state[SELECTED_INDEX] += 1
-                st.rerun()
-
-    
 
 if selected == "Take a Photo":
     take_photo()    
@@ -95,5 +91,32 @@ if selected == "Take a Photo":
 if selected == "Personal Information":
     get_personal_info()
 
+if selected == "Contact Information":
+    get_contact_info()
 
-  
+if selected == "Trades":
+    get_trade_info()    
+
+if selected == "Certificates":    
+    get_certificate_info()
+
+
+st.write("### Navigation")  
+st.write("Selected: ", selected)
+st.write("Index: ", st.session_state[SELECTED_INDEX])
+st.write("Max Index: ", len(MENU_OPTIONS) - 1)
+
+
+col_left, col_right = st.columns([3, 1])
+with col_right:
+    if st.button("Next"):
+        if st.session_state[SELECTED_INDEX] < len(MENU_OPTIONS) - 1:
+            st.session_state[SELECTED_INDEX] += 1
+            st.rerun()
+
+with col_left:
+    if st.button("Previous"):
+        if st.session_state[SELECTED_INDEX] > 0:
+            st.session_state[SELECTED_INDEX] -= 1
+            st.rerun()            
+

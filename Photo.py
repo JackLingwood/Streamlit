@@ -30,7 +30,7 @@ def init_photo_sessions():
 
 
 def show_photo_instructions():
-    col1, col2 = st.columns([0.2, 0.8],gap="large")
+    col1, col2 = st.columns([0.2, 0.8],gap="small")
     with col1:
         st.image("No Hardhat Allowed.png", width=100)
 
@@ -40,7 +40,7 @@ def show_photo_instructions():
         st.write("Use grey or neutral background. Remove any hats, hard hats or other PPE.")
 
 
-    col1a, col2a = st.columns([0.2, 0.8],gap="large")
+    col1a, col2a = st.columns([0.2, 0.8],gap="small")
     with col1a:
         st.image("No Face Coverings.png", width=100)
 
@@ -56,10 +56,11 @@ def show_photo():
 
 
 def take_photo():
+    print("TOP - ", get_session(PHOTO_SESSION))
+    rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+
 
     init_photo_sessions()
-
-
     st.title("Take a Photo 📸")
 
     if get_session(PHOTO_SESSION) == PHOTO_SESSION_7_MOVE_ON:
@@ -133,12 +134,16 @@ def take_photo():
         
         if get_session(PHOTO_SESSION) == PHOTO_SESSION_3_CAMERA_ACTIVE:
             if st.button("Capture Photo"):
+                print("Fetching CTX from session state")
                 ctx = get_session("CTX")
                 if ctx is None:
+                    print("[A] CTX is None, initializing webrtc_streamer")
                     st.write("Camera is active. Click 'Capture Photo' to take a photo.")
                 if not ctx:
+                   print("[B] CTX is not, problem")
                    st.write("Camera is active. Click 'Capture Photo' to take a photo.")
                 else:
+                    print("[C] CTX is not None, capturing frame")
                     st.write("Activating camera... Please wait.")
                     ctx = webrtc_streamer(
                         key="example",
@@ -148,15 +153,20 @@ def take_photo():
                     )
                 img = ctx.video_processor.frame
                 if img is not None:
+                    print("[D] frame, setting session state")
                     st.session_state[CAPTURED_IMAGE_KEY] = img
                     show_photo()
                     set_session(PHOTO_SESSION, PHOTO_SESSION_4_PHOTO_TAKEN)
                     st.rerun()
                     return
                 else:
+                    print("[E] No frame captured, please try again.")
                     st.warning("No frame available yet. Try again in a moment.")
 
         # Launch webcam
+
+        print("[i] Activating camera... Please wait.")
+
         ctx = webrtc_streamer(
             key="example",
             video_processor_factory=VideoTransformer,
@@ -165,10 +175,13 @@ def take_photo():
         )
 
         if ctx.video_processor:
+            print("[ii] Video processor is available, setting session state")
             init("CTX", ctx)
             set_session(PHOTO_SESSION, PHOTO_SESSION_3_CAMERA_ACTIVE)
            
 
     if get_session(PHOTO_SESSION) == PHOTO_SESSION_3_CAMERA_ACTIVE:
         st.write("Camera is active. Click 'Capture Photo' to take a photo.")
+
+    print("BOT - ", get_session(PHOTO_SESSION))
 
