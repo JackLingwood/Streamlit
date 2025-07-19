@@ -8,6 +8,9 @@ MENU_OPTIONS = [
     "Trades", "Certifications", "Consent Form", "Project Courses", "Chat"
 ]
 
+DRIVER_LICENSE = "driver_license"
+
+
 SELECTED_INDEX = "selected_index"
 LAST_NAME = "last_name"
 FIRST_NAME = "first_name"
