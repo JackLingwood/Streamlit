@@ -129,7 +129,7 @@ if selected == "Worker Registration":
             put_text_input(LAST_NAME, "Last Name", "Enter your last name")
             put_text_input(MOBILE, "Mobile", "Enter your mobile number")
 
-        st.write("Upload Certificate Image")
+        st.write("Upload Rear of Driver's License Image")
 
 
         
