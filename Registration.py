@@ -10,11 +10,13 @@ from streamlit_phone_number import st_phone_number
 from Photo import take_photo
 #from Common import init, MENU_OPTIONS, SELECTED_INDEX
 from Common import *
+
 from PersonalInfo import get_personal_info
 from ContactInfo import get_contact_info
 from Trades import get_trade_info
 from Certificates import get_certificate_info
 from ConsentForm import get_consent_form
+from DriversLicense import get_drivers_license_info
 
 
 
@@ -52,51 +54,9 @@ with st.sidebar:
         default_index=st.session_state[SELECTED_INDEX]
     )
 
-def clearConsole():
-    import os
-    os.system('cls' if os.name == 'nt' else 'clear')
 
-def parse_aamva_barcode(raw_data):
-    """
-    Parses AAMVA barcode string from a U.S. driver's license.
-    Returns a dictionary of known fields.
-    """
-    # Convert bytes to string if needed
-    if isinstance(raw_data, bytes):
-        raw_data = raw_data.decode("utf-8", errors="ignore")
-    
-    # Define known AAMVA field codes
-    field_map = {
-        "DAQ": "License Number",
-        "DCS": "Last Name",
-        "DAC": "First Name",
-        "DAD": "Middle Name",
-        "DBB": "Date of Birth",
-        "DBA": "Expiration Date",
-        "DBD": "Issue Date",
-        "DBC": "Gender",
-        "DAY": "Eye Color",
-        "DAU": "Height",
-        "DAG": "Street Address",
-        "DAI": "City",
-        "DAJ": "State",
-        "DAK": "Postal Code",
-        "DCF": "Document Discriminator",
-        "DCG": "Country",
-        "DCK": "Inventory Control Number",
-        "DDB": "Issue Timestamp",
-        "DAW": "Weight",
-    }
 
-    parsed = {}
 
-    # Look for each field using regex
-    for code, label in field_map.items():
-        match = re.search(rf"{code}([^\n\r]*)", raw_data)
-        if match:
-            parsed[label] = match.group(1).strip()
-
-    return parsed
 
 
 def next_step():
@@ -128,119 +88,7 @@ if selected == "Worker Registration":
         with col2:
             put_text_input(LAST_NAME, "Last Name", "Enter your last name")
             put_text_input(MOBILE, "Mobile", "Enter your mobile number")
-
-        st.write("Upload Rear of Driver's License Image")
-
-
-        
-        from PIL import Image
-
-        clearConsole()
-        print("Analyzing barcode from uploaded file...")
-
-        #from pdf417decoder import decode
-        # from PIL import Image
-
-        uploaded_file = st.file_uploader("Choose a file", type=["jpg", "jpeg", "png", "pdf"], key="certificate_image_uploader")
-        if uploaded_file is not None:
-            st.session_state[DRIVER_LICENSE] = uploaded_file
-            st.image(uploaded_file, caption="Uploaded Drivers License", use_container_width=True)
-            # Load your image
-            #image_path = "drivers_license_back.png"
-            #image = Image.open(image_path)
-
-            # Decode PDF417 barcodes in the image
-            image = Image.open(uploaded_file)
-
-            image.save("temp_image.png")  # Save the image temporarily for debugging
-
-            from pyzxing import BarCodeReader
-            reader = BarCodeReader()
-            results = reader.decode("temp_image.png")
-
-            print(results)
-            if results:
-                raw = results[0]['raw']
-                parsed_data = parse_aamva_barcode(raw)
-
-                st.write("Results:")
-                for key, value in parsed_data.items():
-                    st.write(f"{key}: {value}")
-
-
-                @st.dialog("Use driver license data to populate form?")
-                def confirm_action(parsed):
-                    st.write("Do you want to proceed with this action?")
-
-                    st.write("Parsed Data:")
-                    for key, value in parsed.items():
-                        st.write(f"{key}: {value}")
-
-
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        if st.button("Yes"):
-                            st.session_state["confirmed"] = True
-                            st.rerun()
-                    with col2:
-                        if st.button("No"):
-                            st.session_state["confirmed"] = False
-                            st.rerun()
-
-
-                if st.button("Use Driver License Data"):    
-                    if "confirmed" not in st.session_state or st.session_state["confirmed"]:
-                        st.session_state[FIRST_NAME] = parsed_data.get("First Name", "")
-                        st.session_state[LAST_NAME] = parsed_data.get("Last Name", "")
-                        st.session_state[ADDRESS_LINE_1] = parsed_data.get("Street Address", "")
-                        st.session_state[CITY] = parsed_data.get("City", "")
-                        st.session_state[STATE] = parsed_data.get("State", "")
-                        st.session_state[ZIP_CODE] = parsed_data.get("Postal Code", "")
-                        st.session_state[COUNTRY] = parsed_data.get("Country", "")
-
-                        dob_str = parsed_data.get("Date of Birth", "")
-                        dob = datetime.datetime.strptime(dob_str, "%m%d%Y").date()
-                        
-                        st.session_state[DOB] = dob
-                        st.session_state[MOBILE] = parsed_data.get("Mobile", "")
-                        st.session_state[EMAIL] = parsed_data.get("Email", "")
-                        st.write("Form populated with driver license data.")
-                        st.rerun()
-                    else:
-                        confirm_action(parsed=parsed_data)                
-
-
-
-
-            
-
-
-
-
-
-            
-              # Print the results for debugging
-            #print(results[0].raw)  # Print the raw data of the first result
-            #t.write("Raw barcode data:")
-            #st.write(results[0].raw)  # Display the raw data in Streamlit
-            print("++++++++++++++") 
-
-
-
-
-
-
-
-
-
-            #results = decode(image)
-
-            # Display the result
-            # for result in results:
-            #     st.write("Raw barcode data:")
-            #     st.write(result.data.decode('utf-8'))
-
-
+    get_drivers_license_info()        
 
 
 if selected == "Take a Photo":
@@ -260,6 +108,13 @@ if selected == "Certifications":
 
 if selected == "Consent Form":
     get_consent_form()  
+
+if selected == "Project Courses":
+    st.write("Project Courses will be implemented in the future.")
+    
+
+if selected == "Facial Recognition Lab":    
+    get_blue_monkeys()
 
 # st.write("### Navigation")  
 # st.write("Selected: ", selected)

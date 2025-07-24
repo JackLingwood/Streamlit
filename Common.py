@@ -5,7 +5,7 @@ import re
 
 MENU_OPTIONS = [
     "Worker Registration", "Take a Photo", "Personal Information", "Contact Information",
-    "Trades", "Certifications", "Consent Form", "Project Courses", "Chat"
+    "Trades", "Certifications", "Consent Form", "Project Courses", "Chat", "Facial Recognition Lab"
 ]
 
 DRIVER_LICENSE = "driver_license"
@@ -64,11 +64,6 @@ CONSENT_FORM_SUPERVISOR_NAME = "consent_form_supervisor_name"
 
 CONSENT_FORM_SIGNATURE_DATE = "consent_form_signature_date"
 CONSENT_FORM_SIGNATURE = "consent_form_signature"
-
-
-
-
-
 
 def init_session_variables():
     init(SELECTED_INDEX, 0)
@@ -170,3 +165,7 @@ def put_date_input(session_key, label, min_value=None, max_value=None, label_vis
         max_value=max_value,
         label_visibility=label_visibility
     )
+
+def clearConsole():
+    import os
+    os.system('cls' if os.name == 'nt' else 'clear')    

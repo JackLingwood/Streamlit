@@ -54,6 +54,29 @@ def show_photo():
     if st.session_state[CAPTURED_IMAGE_KEY] is not None:
         st.image(st.session_state[CAPTURED_IMAGE_KEY], channels="BGR")
 
+        img = st.session_state[CAPTURED_IMAGE_KEY]
+
+        import cv2
+        import mediapipe as mp
+
+        mp_face_mesh = mp.solutions.face_mesh
+        face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True)
+
+        image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        #image = cv2.imread("passport.jpg")
+        results = face_mesh.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+
+        if results.multi_face_landmarks:
+            print("Face detected.")
+            landmarks = results.multi_face_landmarks[0]
+            print(f"Number of landmarks detected: {len(landmarks.landmark)}")
+            # Check key facial areas (eyes, nose, mouth) are all visible
+        else:
+            print("No face detected.")
+
+
+
+
 
 def take_photo():
     print("TOP - ", get_session(PHOTO_SESSION))
