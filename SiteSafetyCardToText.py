@@ -68,7 +68,7 @@ st.title("📇 Certification Card Text Extractor")
 uploaded_file = st.file_uploader("Upload a certification image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    st.image(uploaded_file, caption="Uploaded image", use_column_width=True)
+    st.image(uploaded_file, caption="Uploaded image", use_container_width=True)
 
     with st.spinner("Running OCR..."):
         ocr_text = extract_text_from_image(uploaded_file)

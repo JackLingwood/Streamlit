@@ -3,7 +3,7 @@ from PIL import Image
 import re
 
 # Load image
-image_path = "certification_20230616_184140_1.jpg"
+image_path = "certification_sample.jpg"
 image = Image.open(image_path)
 
 # Run OCR
