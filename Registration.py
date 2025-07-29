@@ -90,11 +90,11 @@ if selected == "Worker Registration":
         with col2:
             put_text_input(LAST_NAME, "Last Name", "Enter your last name")
             put_text_input(MOBILE, "Mobile", "Enter your mobile number")
-    get_drivers_license_info()        
+    get_drivers_license_info()
 
 
 if selected == "Take a Photo":
-    take_photo()    
+    take_photo()
         
 if selected == "Personal Information":
     get_personal_info()
@@ -103,13 +103,13 @@ if selected == "Contact Information":
     get_contact_info()
 
 if selected == "Trades":
-    get_trade_info()    
+    get_trade_info()
 
 if selected == "Certifications":    
     get_certificate_info()
 
 if selected == "Consent Form":
-    get_consent_form()  
+    get_consent_form()
 
 if selected == "Project Courses":
     st.write("Project Courses will be implemented in the future.")
@@ -117,13 +117,6 @@ if selected == "Project Courses":
 
 if selected == "Facial Recognition Lab":    
     do_cert_demo()
-
-    #SiteSafetyCardToText.py
-
-# st.write("### Navigation")  
-# st.write("Selected: ", selected)
-# st.write("Index: ", st.session_state[SELECTED_INDEX])
-# st.write("Max Index: ", len(MENU_OPTIONS) - 1)
 
 col_left, col_right = st.columns([3, 1])
 with col_right:

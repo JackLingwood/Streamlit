@@ -25,8 +25,6 @@ def do_cert_demo():
     vision_client = vision.ImageAnnotatorClient(credentials=credentials)
     print("Vision client initialized.")
 
-
-
     # Extract text from uploaded image
     def extract_text_from_image(uploaded_file):
         content = uploaded_file.read()
