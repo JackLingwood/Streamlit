@@ -2,3 +2,9 @@ streamlit-option-menu
 streamlit_phone_number
 streamlit_webrtc
 opencv-python
+
+streamlit
+google-cloud-vision
+google-cloud-aiplatform
+google-generativeai
+python-dotenv

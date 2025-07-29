@@ -11,3 +11,5 @@ __pycache__/*
 *cpython*
 __pycache__/Photo.cpython-312.pyc
 temp_image.png
+.env
+dulcet-nucleus-467215-v1-4d6a16f6c792.json
