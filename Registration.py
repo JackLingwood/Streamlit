@@ -17,6 +17,7 @@ from Trades import get_trade_info
 from Certificates import get_certificate_info
 from ConsentForm import get_consent_form
 from DriversLicense import get_drivers_license_info
+from SiteSafetyCardToText import do_cert_demo
 
 
 # https://github.com/ikatyang/emoji-cheat-sheet
@@ -52,11 +53,6 @@ with st.sidebar:
         default_index=st.session_state[SELECTED_INDEX]
     )
 
-
-
-
-
-
 def next_step():
     # if st.button("Next"):
     # if st.session_state["selected_index"] < len(MENU_OPTIONS) - 1:
@@ -65,6 +61,14 @@ def next_step():
     
     st.session_state.setup_complete = True
     st.write("Setup complete. Starting interview...")
+
+current_side_bar_index = st.session_state[SELECTED_INDEX]   
+indexOfSelected = MENU_OPTIONS.index(selected)
+if current_side_bar_index != indexOfSelected:
+    print("Updating selected index from", current_side_bar_index, "to", indexOfSelected)
+    st.session_state[SELECTED_INDEX] = indexOfSelected
+else:
+    print("Selected index is already", current_side_bar_index)  
 
 if selected == "Worker Registration":
     col1, col2 = st.columns([2, 1])
@@ -112,7 +116,7 @@ if selected == "Project Courses":
     
 
 if selected == "Facial Recognition Lab":    
-    import SiteSafetyCardToText
+    do_cert_demo()
 
     #SiteSafetyCardToText.py
 
@@ -124,13 +128,19 @@ if selected == "Facial Recognition Lab":
 col_left, col_right = st.columns([3, 1])
 with col_right:
     if st.button("Next", key="next_button"):
+        print("st.session_state[SELECTED_INDEX]:", st.session_state[SELECTED_INDEX])
+        print("len(MENU_OPTIONS) - 1:", len(MENU_OPTIONS) - 1)
+        print("st.session_state[SELECTED_INDEX] < len(MENU_OPTIONS) - 1:", st.session_state[SELECTED_INDEX] < len(MENU_OPTIONS) - 1)
         if st.session_state[SELECTED_INDEX] < len(MENU_OPTIONS) - 1:
             st.session_state[SELECTED_INDEX] += 1
             st.rerun()
+        else:
+            print("At end")
 
 with col_left:
     if st.button("Previous", key="prev_button"):
         if st.session_state[SELECTED_INDEX] > 0:
             st.session_state[SELECTED_INDEX] -= 1
-            st.rerun()            
-
+            st.rerun()
+        else:
+            print("At start") 
