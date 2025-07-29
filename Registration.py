@@ -19,8 +19,6 @@ from ConsentForm import get_consent_form
 from DriversLicense import get_drivers_license_info
 
 
-
-
 # https://github.com/ikatyang/emoji-cheat-sheet
 
 st.set_page_config(
@@ -114,7 +112,9 @@ if selected == "Project Courses":
     
 
 if selected == "Facial Recognition Lab":    
-    get_blue_monkeys()
+    import SiteSafetyCardToText
+
+    #SiteSafetyCardToText.py
 
 # st.write("### Navigation")  
 # st.write("Selected: ", selected)
@@ -123,13 +123,13 @@ if selected == "Facial Recognition Lab":
 
 col_left, col_right = st.columns([3, 1])
 with col_right:
-    if st.button("Next"):
+    if st.button("Next", key="next_button"):
         if st.session_state[SELECTED_INDEX] < len(MENU_OPTIONS) - 1:
             st.session_state[SELECTED_INDEX] += 1
             st.rerun()
 
 with col_left:
-    if st.button("Previous"):
+    if st.button("Previous", key="prev_button"):
         if st.session_state[SELECTED_INDEX] > 0:
             st.session_state[SELECTED_INDEX] -= 1
             st.rerun()            
