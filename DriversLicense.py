@@ -54,9 +54,6 @@ def get_drivers_license_info():
     st.write("Upload Rear of Driver's License Image")
     from PIL import Image
 
-    
-    
-
     #from pdf417decoder import decode
     # from PIL import Image
 
@@ -64,14 +61,17 @@ def get_drivers_license_info():
     if uploaded_file is not None:        
         print("Analyzing barcode from uploaded file...")
         st.session_state[DRIVER_LICENSE] = uploaded_file
-        st.image(uploaded_file, caption="Uploaded Drivers License", use_container_width=True)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+           st.image(uploaded_file, caption="Uploaded Drivers License", use_container_width=True)
         # Load your image
         #image_path = "drivers_license_back.png"
         #image = Image.open(image_path)
 
         # Decode PDF417 barcodes in the image
         image = Image.open(uploaded_file)
-
         image.save("temp_image.png")  # Save the image temporarily for debugging
 
         from pyzxing import BarCodeReader
@@ -83,9 +83,36 @@ def get_drivers_license_info():
             raw = results[0]['raw']
             parsed_data = parse_aamva_barcode(raw)
 
-            st.write("Results:")
-            for key, value in parsed_data.items():
-                st.write(f"{key}: {value}")
+            with col2:
+                st.write("Results:")
+                for key, value in parsed_data.items():
+                    st.write(f"{key}: {value}")
+
+                if st.button("Use Driver License Data"): 
+                    print("ATTEMPTING TO USE DRIVER LICENSE DATA")   
+                    if "confirmed" not in st.session_state or st.session_state["confirmed"]:
+                        st.session_state[FIRST_NAME] = parsed_data.get("First Name", "")
+                        st.session_state[LAST_NAME] = parsed_data.get("Last Name", "")
+                        st.session_state[ADDRESS_LINE_1] = parsed_data.get("Street Address", "")
+                        st.session_state[CITY] = parsed_data.get("City", "")
+
+                        state_abbr = parsed_data.get("State", "")                    
+                        state_name = get_state_name(state_abbr)
+                        st.session_state[STATE] = state_name
+
+                        st.session_state[ZIP_CODE] = parsed_data.get("Postal Code", "")
+                        st.session_state[COUNTRY] = parsed_data.get("Country", "")
+
+                        dob_str = parsed_data.get("Date of Birth", "")
+                        dob = datetime.datetime.strptime(dob_str, "%m%d%Y").date()
+                        
+                        st.session_state[DOB] = dob
+                        st.session_state[MOBILE] = parsed_data.get("Mobile", "")
+                        st.session_state[EMAIL] = parsed_data.get("Email", "")
+                        st.write("Form populated with driver license data.")
+                        st.rerun()
+                    else:
+                        confirm_action(parsed=parsed_data)                
 
 
             @st.dialog("Use driver license data to populate form?")
@@ -108,31 +135,7 @@ def get_drivers_license_info():
                         st.rerun()
 
 
-            if st.button("Use Driver License Data"): 
-                print("ATTEMPTING TO USE DRIVER LICENSE DATA")   
-                if "confirmed" not in st.session_state or st.session_state["confirmed"]:
-                    st.session_state[FIRST_NAME] = parsed_data.get("First Name", "")
-                    st.session_state[LAST_NAME] = parsed_data.get("Last Name", "")
-                    st.session_state[ADDRESS_LINE_1] = parsed_data.get("Street Address", "")
-                    st.session_state[CITY] = parsed_data.get("City", "")
 
-                    state_abbr = parsed_data.get("State", "")                    
-                    state_name = get_state_name(state_abbr)
-                    st.session_state[STATE] = state_name
-
-                    st.session_state[ZIP_CODE] = parsed_data.get("Postal Code", "")
-                    st.session_state[COUNTRY] = parsed_data.get("Country", "")
-
-                    dob_str = parsed_data.get("Date of Birth", "")
-                    dob = datetime.datetime.strptime(dob_str, "%m%d%Y").date()
-                    
-                    st.session_state[DOB] = dob
-                    st.session_state[MOBILE] = parsed_data.get("Mobile", "")
-                    st.session_state[EMAIL] = parsed_data.get("Email", "")
-                    st.write("Form populated with driver license data.")
-                    st.rerun()
-                else:
-                    confirm_action(parsed=parsed_data)                
 
 
 

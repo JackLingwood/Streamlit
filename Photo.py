@@ -175,7 +175,8 @@ def take_photo():
                         async_processing=True,
                     )
                 img = ctx.video_processor.frame
-                if img is not None:
+                #if img is not None:
+                if ctx.video_processor and ctx.video_processor.frame is not None:
                     print("[D] frame, setting session state")
                     st.session_state[CAPTURED_IMAGE_KEY] = img
                     show_photo()

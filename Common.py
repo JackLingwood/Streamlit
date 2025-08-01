@@ -10,6 +10,9 @@ MENU_OPTIONS = [
 
 DRIVER_LICENSE = "driver_license"
 
+CERTIFICATION_TYPES = [
+    "Select Type", "Trade Certification", "Safety Certification", "Other"
+]
 
 SELECTED_INDEX = "selected_index"
 LAST_NAME = "last_name"
@@ -46,6 +49,10 @@ WORK_EXPERIENCE = "work_experience"
 LABOR_UNION = "labor_union"
 LABOR_UNION_NUMBER = "labor_union_number"
 SELECTED_TRADES = "selected_trades"
+
+CERTIFICATIONS = "certifications"
+PROCESSING_CERTIFICATE = "processing_certificate"
+CANCEL_NEW_CERTIFICATE = "cancel_new_certificate"
 
 CERTIFICATION_TYPE = "certification_type"
 CERTIFICATE_ID = "certificate_id"
@@ -111,6 +118,11 @@ def init_session_variables():
     init(CERTIFICATE_ISSUED_BY, "")
     init(CERTIFICATE_IMAGE, None)
     init(CONSENT_FORM_SUPERVISOR_PHONE, "")
+    init(CERTIFICATIONS, [])
+    init(PROCESSING_CERTIFICATE, False)
+    init(CANCEL_NEW_CERTIFICATE, False)
+
+
 
     init(CONSENT_FORM_JOB_TITLE, "")
     init(CONSENT_FORM_TRADE_STATUS, "")
@@ -127,6 +139,22 @@ def init(key, default_value):
 def get_session(key):
     return st.session_state.get(key, None)
 
+def session_not(key):
+    value = get_session(key)
+    if value is None:
+        return True
+    if isinstance(value, bool):
+        return not value
+    
+def session_is(key):
+    value = get_session(key)
+    if value is None:
+        return False
+
+    if isinstance(value, bool):
+        return value
+    
+
 def is_valid_email(email):
     pattern = r"^[\w\.-]+@[\w\.-]+\.\w{2,}$"
     return re.match(pattern, email) is not None
@@ -136,6 +164,7 @@ def put_phone(session_key, label="", placeholder="", default_country="US"):
 
 def put_text_input(session_key, label, placeholder="", type="default", max_chars=20, label_visibility="collapsed"):
     st.session_state[session_key] = st.text_input(label=label, value=st.session_state[session_key], placeholder=placeholder, type=type, max_chars=max_chars, label_visibility=label_visibility)
+
 
 
 def put_selectbox(session_key, label, options, index=0):
@@ -169,3 +198,55 @@ def put_date_input(session_key, label, min_value=None, max_value=None, label_vis
 def clearConsole():
     import os
     os.system('cls' if os.name == 'nt' else 'clear')    
+
+
+# Create a class for storing certificate data
+class CertificateData:
+    def __init__(self):
+        self.type = ""
+        self.id = ""
+        self.description = ""
+        self.issue_date = datetime.date.today()
+        self.expiry_date = datetime.date.today()
+        self.issued_by = ""
+        self.image = None
+
+    def __init__(self, type="", id="", description="", issue_date=None, expiry_date=None, issued_by="", image=None):
+        self.type = type
+        self.id = id
+        self.description = description
+        self.issue_date = issue_date or datetime.date.today()
+        self.expiry_date = expiry_date or datetime.date.today()
+        self.issued_by = issued_by
+        self.image = image
+
+    def to_dict(self):
+        def safe_isoformat(date_value):
+            if hasattr(date_value, "isoformat"):
+                return date_value.isoformat()
+            try:
+                # Try to parse string to date
+                return datetime.strptime(date_value, "%m/%d/%Y").date().isoformat()
+            except Exception:
+                return str(date_value)
+        return {
+            "type": self.type,
+            "id": self.id,
+            "description": self.description,
+            "issue_date": safe_isoformat(self.issue_date),
+            "expiry_date": safe_isoformat(self.expiry_date),
+            "issued_by": self.issued_by,
+            "image": self.image
+        }
+    
+# Create a class for storing multiple certificates
+class CertificateCollection:
+    def __init__(self):
+        self.certificates = []
+
+    def add_certificate(self, certificate: CertificateData):
+        self.certificates.append(certificate)
+
+    def to_dict(self):
+        return [cert.to_dict() for cert in self.certificates]
+    
